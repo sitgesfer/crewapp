@@ -1,0 +1,21 @@
+.dashboard {
+    margin-top: 2em;
+
+    .panel {
+        .member-pic {
+            width: 6em;
+        }
+
+        .arrows-row {
+            padding: 1em 0;
+        }
+
+        .arrows-row img {
+            height: 3em;
+        }
+
+        .move {
+            cursor: pointer;
+        }
+    }
+}
