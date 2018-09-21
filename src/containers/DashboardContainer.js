@@ -1,5 +1,5 @@
 import connect from 'react-redux/es/connect/connect';
-import { getCrew } from '../actions/crewActions';
+import { getCrew, moveCrew } from '../actions/crewActions';
 import Dashboard from '../components/Dashboard';
 
 const mapStateToProps = state => ({
@@ -11,6 +11,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onGetCrew: () => {
     dispatch(getCrew());
+  },
+  onMoveCrew: (member, status) => {
+    dispatch(moveCrew(member, status));
   },
 });
 

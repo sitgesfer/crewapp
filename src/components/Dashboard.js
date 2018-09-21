@@ -1,59 +1,46 @@
 import React, { Component } from 'react';
-import {
-  Grid, Row, Col, Panel, Image,
-} from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {
+  Grid, Row, Col,
+} from 'react-bootstrap';
+import _ from 'lodash';
+import Card from './Card';
 import '../styles/Dashboard.scss';
-import dummypic from '../assets/images/monalisa.jpg';
-import arrowback from '../assets/images/arrowback.svg';
-import arrowfwd from '../assets/images/arrowfwd.svg';
-
-const Card = (props) => {
-  const { status } = props;
-  return (
-    <Panel>
-      <Panel.Body>
-        <Row>
-          <Col xs={6}>
-            <Image src={dummypic} circle responsive className="member-pic" />
-          </Col>
-          <Col xs={6}>
-            <h4>Fernando Rivas</h4>
-          </Col>
-        </Row>
-        <Row className="arrows-row">
-          <Col xs={6}>
-            {
-            status === 'hired' || status === 'interviewing'
-              ? (
-                <span className="move move-left"><Image src={arrowback} className="pull-left" /></span>
-              )
-              : null
-            }
-          </Col>
-          <Col xs={6}>
-            {
-              status === 'applied' || status === 'interviewing'
-                ? (
-                  <span className="move move-right"><Image src={arrowfwd} className="pull-right" /></span>
-                )
-                : null
-            }
-          </Col>
-        </Row>
-      </Panel.Body>
-    </Panel>
-  );
-};
-
-Card.propTypes = {
-  status: PropTypes.string.isRequired,
-};
 
 class Dashboard extends Component {
   componentDidMount() {
     const { onGetCrew } = this.props;
     onGetCrew();
+  }
+
+  /**
+   * Changes a status of a member according to his/her
+   * current position to the left of the dashboard.
+   * @param member
+   * @param status
+   */
+  sendMemberLeft(member, status) {
+    const { onMoveCrew } = this.props;
+    if (status === 'interviewing') {
+      onMoveCrew(member, 'applied');
+    } else {
+      onMoveCrew(member, 'interviewing');
+    }
+  }
+
+  /**
+   * Changes a status of a member according to his/her
+   * current position to the right of the dashboard.
+   * @param member
+   * @param status
+   */
+  sendMemberRight(member, status) {
+    const { onMoveCrew } = this.props;
+    if (status === 'applied') {
+      onMoveCrew(member, 'interviewing');
+    } else {
+      onMoveCrew(member, 'hired');
+    }
   }
 
   render() {
@@ -62,7 +49,21 @@ class Dashboard extends Component {
 
     if (members.length > 0) {
       members.forEach((singleMember, key) => {
-        memberCards[memberStatus[key].status].push(<Card key={key} status={memberStatus[key].status} />);
+        const memberDataProps = {
+          name: `${singleMember.name.title} ${singleMember.name.first} ${singleMember.name.last}`,
+          city: singleMember.location.city,
+          picture: singleMember.picture.medium,
+        };
+
+        memberCards[memberStatus[key].status]
+          .push(<Card
+            key={_.uniqueId()}
+            member={key}
+            status={memberStatus[key].status}
+            onSendLeft={(member, status) => this.sendMemberLeft(member, status)}
+            onSendRight={(member, status) => this.sendMemberRight(member, status)}
+            {...memberDataProps}
+          />);
       });
     }
 
@@ -99,6 +100,7 @@ Dashboard.propTypes = {
   onGetCrew: PropTypes.func.isRequired,
   members: PropTypes.array.isRequired,
   memberStatus: PropTypes.array.isRequired,
+  onMoveCrew: PropTypes.func.isRequired,
 };
 
 export default Dashboard;

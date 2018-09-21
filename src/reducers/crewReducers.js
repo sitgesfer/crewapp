@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GET_CREW } from '../actions/crewActions';
+import { GET_CREW, MOVE_CREW } from '../actions/crewActions';
 
 const initialState = {
   members: [],
@@ -9,6 +9,7 @@ const initialState = {
 
 const crew = (state = initialState, action) => {
   switch (action.type) {
+    // Get crew member reducer promise based actions.
     case `${GET_CREW}_PENDING`: {
       return state;
     }
@@ -22,7 +23,15 @@ const crew = (state = initialState, action) => {
     }
     case `${GET_CREW}_REJECTED`: {
       return Object.assign({}, state, {
-        tableSuccessful: false,
+        successful: false,
+      });
+    }
+    // Change crew member status simple action.
+    case MOVE_CREW: {
+      const newMemberStatus = state.memberStatus.slice();
+      newMemberStatus[action.payload.member] = { status: action.payload.status };
+      return Object.assign({}, state, {
+        memberStatus: newMemberStatus,
       });
     }
     default:

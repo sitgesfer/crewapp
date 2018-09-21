@@ -6,6 +6,15 @@
             width: 6em;
         }
 
+        h4 {
+            text-transform: capitalize;
+        }
+
+        .member-name {
+            font-style: italic;
+            text-transform: capitalize;
+        }
+
         .arrows-row {
             padding: 1em 0;
         }
