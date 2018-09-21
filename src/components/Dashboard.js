@@ -47,11 +47,25 @@ const Card = (props) => {
 };
 
 Card.propTypes = {
-  status: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 class Dashboard extends Component {
+  componentDidMount() {
+    const { onGetCrew } = this.props;
+    onGetCrew();
+  }
+
   render() {
+    const { members, memberStatus } = this.props;
+    const memberCards = { applied: [], interviewing: [], hired: [] };
+
+    if (members.length > 0) {
+      members.forEach((singleMember, key) => {
+        memberCards[memberStatus[key].status].push(<Card key={key} status={memberStatus[key].status} />);
+      });
+    }
+
     return (
       <Grid className="dashboard">
         <Row>
@@ -67,14 +81,13 @@ class Dashboard extends Component {
         </Row>
         <Row>
           <Col xs={4}>
-            <Card status="applied" />
-            <Card status="applied" />
+            { memberCards.applied}
           </Col>
           <Col xs={4}>
-            <Card status="interviewing" />
+            { memberCards.interviewing}
           </Col>
           <Col xs={4}>
-            <Card status="hired" />
+            { memberCards.hired}
           </Col>
         </Row>
       </Grid>
@@ -82,6 +95,10 @@ class Dashboard extends Component {
   }
 }
 
-Dashboard.propTypes = {};
+Dashboard.propTypes = {
+  onGetCrew: PropTypes.func.isRequired,
+  members: PropTypes.array.isRequired,
+  memberStatus: PropTypes.array.isRequired,
+};
 
 export default Dashboard;
