@@ -1,0 +1,30 @@
+.dashboard {
+    margin-top: 2em;
+
+    .panel {
+        .member-pic {
+            width: 6em;
+        }
+
+        h4 {
+            text-transform: capitalize;
+        }
+
+        .member-name {
+            font-style: italic;
+            text-transform: capitalize;
+        }
+
+        .arrows-row {
+            padding: 1em 0;
+        }
+
+        .arrows-row img {
+            height: 3em;
+        }
+
+        .move {
+            cursor: pointer;
+        }
+    }
+}
